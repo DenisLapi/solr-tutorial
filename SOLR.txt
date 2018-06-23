@@ -1,0 +1,67 @@
+///////////////////////////////////////////////////////////////////////////////////////////////
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ cURL COMMANDS FOR SOLR ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+1) Delete using cURL (WITH INSTANT UPDATE) :
+
+curl -X POST -H "Content-Type:application/json" "http://localhost:8983/solr/localDocs/update?commit=true" --data-binary 
+"{
+'delete': 'db7b1485-55df-4bb6-a50f-13eb8b944125'
+}"
+
+--------------------------------------------------------------
+
+2) Add the JSON text in to the core (WITH INSTAND UPDATE) :
+
+curl -X POST -H "Content-Type:application/json" "http://localhost:8983/solr/pdf_core_sample/update?commit=true" --data-binary 
+"{
+  'add': {
+    'doc': {
+      'id': 'DOC2',
+      'title': 'This is the new title using add object | WITH UPDATE /update?commit=true'
+    }
+  }
+}"
+
+3) Delete using cURL (USING THE DIFFERENT PROPERTY VALUES | NOT JUST ID)
+
+curl -X POST -H "Content-Type:application/json" "http://localhost:8983/solr/pdf_core_sample/update?commit=true" --data-binary 
+"{ 'delete': { 'property':'value' } }"
+
+4) Add JSON file using cURL
+
+curl -X POST -H "Content-Type:application/json" "http://localhost:8983/solr/pdf_core_sample/update?commit=true" --data-binary @files/simple_1.json
+
+-> File structure (with add and doc)
+{
+  "add": {
+    "doc": {
+      "name":"Johny"
+    }
+  }
+}
+
+5) POST PDF File using cURL
+
+curl -X POST -H "Content-Type:application/pdf" "http://localhost:8983/solr/pdf_core_sample/update/extract" --data-binary @files/pdf_sample.pdf
+
+6) POST PDF file using cURL, with paramater for file name
+
+curl -X POST -H "Content-Type:application/pdf" "http://localhost:8983/solr/pdf_core_sample/update/extract?literal.filename=pdfsample" --data-binary @files/pdf_sample.pdf
+
+
+*** URL NEED TO BE ENCODED or parameters should not have a white space
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Java Post TOOL WINDOWS ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+1) Post JSON file using Java Post Tool in SOLR :
+
+java -Dtype=application/json -Durl=http://localhost:8983/solr/MY_COLLECTION/update/json/docs -Dc=localDocs -jar path/to/post.jar ../filepath/file.extension
+
+--------------------------------------------------------------
+
+2) Upload PDF file with filename parameter :
+
+java -Durl=http://localhost:8983/solr/pdf_core_sample/update/extract -Dparams=literal.fileName=pdf_sample -jar post.jar pdf_sample.pdf
